@@ -4,10 +4,20 @@ const { ensureAuthenticated } = require('../middlewares/authorize');
 
 const paymentController = require('../app/controllers/PaymentController');
 
-router.post('/:id/order/payOrder', paymentController.payOrder);
+router.get('/:id/order/orderSuccess', paymentController.paySuccess);
+
+router.post('/:id/order/:id/payOrder', paymentController.payOrder);
 router.get('/:id/order', paymentController.showOrder);
 
-router.post('/', paymentController.payCOD);
+// router.get('/paymentCus/noPro/:id', paymentController.promotion2);
+
+router.post('/paymentCus/:id/promotion', paymentController.promotion2);
+// router.get('/paymentCus/:id/promotion', paymentController.promotion2);
+router.get('/paymentCus', paymentController.showCusPayment);
+
+router.post('/promotion', paymentController.promotion);
+
+router.post('/', paymentController.getPayment);
 router.get('/', paymentController.showPayment);
 
 

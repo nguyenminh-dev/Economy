@@ -10,6 +10,4 @@ const showOrder = async(req, res, next) => {
     res.render('TabOrder/order', { layout: 'mainEmpty.hbs' });
 }
 
-
-
 module.exports = { showOrder }

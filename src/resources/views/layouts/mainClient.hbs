@@ -12,22 +12,28 @@
    <link rel="stylesheet" href="/client/css/bootstrap.min.css">
    <link rel="stylesheet" href="/client/css/templatemo.css">
    <link rel="stylesheet" href="/client/css/custom.css">
-   <link rel="stylesheet" href="/client/css/custom-1.css">
-   <link rel="stylesheet" href="/client/css/tu.css">
+   {{!--
+   <link rel="stylesheet" href="/client/css/custom-1.css"> --}}
+   {{!--
+   <link rel="stylesheet" href="/client/css/tu.css"> --}}
    <link rel="stylesheet" href="/client/css/chatbox.css">
+
 
 
    <!-- Load fonts style after rendering the layout styles -->
    <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
 
-   <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;0,300;0,400;0,600;0,800;0,900;1,200&display=swap" rel="stylesheet">
+   <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;0,300;0,400;0,600;0,800;0,900;1,200&display=swap"
+      rel="stylesheet">
 
-   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
 
    <link rel="stylesheet" href="/client/css/fontawesome.min.css">
 
-   <title>KCT Shop</title>
+   <title>Glamorous</title>
 </head>
 
 <body>
@@ -58,8 +64,17 @@
                   </tr>
                </tbody>
             </table>
-            <a class="btn btn-success btn-site-cart" href="/payment">THANH TOÁN</a>
             <!-- End Total Table -->
+            {{#if isAuthenticated}}
+            <div class="payment-btn">
+               <a class="btn btn-success btn-site-cart" href="/payment/paymentCus">THANH TOÁN</a>
+            </div>
+            {{else}}
+            <div class="payment-btn">
+               <a class="btn btn-success btn-site-cart" href="/payment">THANH TOÁN</a>
+            </div>
+            {{/if}}
+
          </div>
       </div>
       <!-- End Cart modal -->

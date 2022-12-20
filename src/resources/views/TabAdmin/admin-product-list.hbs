@@ -23,7 +23,7 @@
 								<img src="{{this.skus.0.img}}" alt="image_product">
 							</div>
 						</div>
-						<h5 class="title"><a href="">{{this.name}}</a></h5>
+						<h5 class="title"><a href="/adminProduct/{{this._id}}/editProduct">{{this.name}}</a></h5>
 						<ul class="list-group list-group-flush">
 							<li class="list-group-item">
 								<span class="mb-0 title">Loại:</span>
@@ -43,7 +43,7 @@
 						</ul>
 					</div>
 					<div class="card-footer d-flex">
-						<a href="/adminProduct/{{this._id}}/editProduct" class="btn btn-success btn-xs">Chỉnh sửa sản
+						<a href="/adminProduct/{{this._id}}/editProduct" class="btn btn-success btn-xs mr-2">Chỉnh sửa sản
 							phẩm</a>
 						<a href="/adminProduct/deleteProduct/{{this._id}}" class="btn btn-danger btn-xs">Xoá</a>
 						

@@ -1,23 +1,34 @@
 const Product = require('../models/Product');
 const User = require('../models/User');
+const Order = require('../models/Order');
 
 const { mongooseToObject } = require('../../config/utility/mongoose')
 const { multipleToObject } = require('../../config/utility/mongoose');
 
 //[GET] /admin
 const showAdmin = async(req, res, next) => {
-    // User.findOne({ role: 'admin' }).then((user) => {
-    //     res.render('TabAdmin/admin-info', { layout: 'mainAdmin.hbs', user: mongooseToObject(user) });
-    // })
     const user = await User.findById(req.user._id);
-    res.render('TabAdmin/admin-info', { layout: 'mainAdmin.hbs', user: mongooseToObject(user) });
+    const product = await Product.findOne({ name: 'ELAN EARRINGS' });
+    const order = await Order.find();
+    const order2 = await Order.findOne({ orderStatus: 'danger' });
+
+    let sum = 0;
+    for (var i in order) {
+        if (order[i].orderStatus == 'success') {
+            sum++
+            var orderSuccess = sum
+
+        }
+        if (order[i].orderStatus == 'danger') {
+            sum++
+            var orderFail = sum
+        }
+    }
+    res.render('TabAdmin/admin-info', { layout: 'mainAdmin.hbs', orderSuccess: orderSuccess, orderFail: orderFail, user: mongooseToObject(user), product: mongooseToObject(product), order: multipleToObject(order), order2: mongooseToObject(order2) });
 }
 
 //[GET] /admin/:id/adminProfile
 const showAdminProfile = async(req, res, next) => {
-    // User.findOne({ role: 'admin' }).then((user) => {
-    //     res.render('TabAdmin/admin-profile', { layout: 'mainAdmin.hbs', user: mongooseToObject(user) });
-    // })
     const user = await User.findById(req.user._id);
     res.render('TabAdmin/admin-profile', { layout: 'mainAdmin.hbs', user: mongooseToObject(user) });
 }
@@ -38,4 +49,3 @@ const updateProfile = async(req, res, next) => {
 }
 
 module.exports = { showAdmin, showAdminProfile, updateProfile }
-

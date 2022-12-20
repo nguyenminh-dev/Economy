@@ -1,8 +1,8 @@
-const Product = require('../models/Product');
-const User = require('../models/User');
-
 const { mongooseToObject } = require('../../config/utility/mongoose')
 const { multipleToObject } = require('../../config/utility/mongoose');
+
+const Product = require('../models/Product');
+const User = require('../models/User');
 
 //[GET] /adminProduct
 const showProductList = async(req, res, next) => {
@@ -19,7 +19,8 @@ const showCreateList = async(req, res, next) => {
 
 //[POST] /adminProduct/createProduct/save
 const createProduct = async(req, res, next) => {
-    const { name, category, price, gender } = req.body;
+    const { name, category, price, gender, sizes, qty } = req.body;
+    // res.json(req.body)
     const product = new Product({
         name,
         category,
@@ -27,23 +28,50 @@ const createProduct = async(req, res, next) => {
         price,
     });
     await product.save();
-
-    const product1 = await Product.findOneAndUpdate({ _id: product._id }, {
-        $push: {
-            skus: [{
-                sku: req.body.sku,
-                img: req.body.img,
-                color: {
-                    title: req.body.color_name,
-                    color_code: req.body.color_id,
-                },
-                sizes: [{
-                    size: req.body.sizes,
-                    qty: req.body.qty,
+    if(typeof(req.body.sizes) === 'object') {
+        await Product.findOneAndUpdate({ _id: product._id }, {
+            $push: {
+                skus: [{
+                    sku: req.body.sku,
+                    img: req.body.img,
+                    color: {
+                        title: req.body.color_name,
+                        color_code: req.body.color_id,
+                    },
+                    sizes: []
                 }]
-            }]
+            }
+        }, { new: true });
+
+        for(var i = 0; i < req.body.sizes.length; i++) {
+            await Product.updateOne(
+                    {_id: product._id, 'skus.sku': req.body.sku},
+                    { $push: {
+                        'skus.$.sizes': {size: req.body.sizes[i], qty: req.body.qty[i]}
+                    }},
+                    // {arrayFilters: [{'skus.sku': order.items[i].size}]}
+                )
         }
-    }, { new: true });
+    }
+    else {
+        await Product.findOneAndUpdate({ _id: product._id }, {
+            $push: {
+                skus: [{
+                    sku: req.body.sku,
+                    img: req.body.img,
+                    color: {
+                        title: req.body.color_name,
+                        color_code: req.body.color_id,
+                    },
+                    sizes: [{
+                        size: req.body.sizes, 
+                        qty: req.body.qty,
+                    }]
+                }]
+            }
+        }, { new: true });
+    }
+
 
     const user = await User.findOne({ role: 'admin' });
     Product.findById(product._id)
@@ -55,10 +83,33 @@ const createProduct = async(req, res, next) => {
 
 // [POST] /adminProduct/createProduct/save/:id/saveSkus
 const createSkus = async(req, res, next) => {
-    const product1 = await Product.findById(req.params.id);
-    console.log(product1)
+    if(typeof(req.body.sizes) === 'object') {
+        await Product.updateOne({ _id: req.params.id }, {
+            $push: {
+                skus: [{
+                    sku: req.body.sku,
+                    img: req.body.img,
+                    color: {
+                        title: req.body.color_name,
+                        color_code: req.body.color_id,
+                    },
+                    sizes: []
+                }]
+            }
+        }, { new: true });
 
-    await Product.updateOne({ _id: req.params.id }, {
+        for(var i = 0; i < req.body.sizes.length; i++) {
+            await Product.updateOne(
+                    {_id: req.params.id, 'skus.sku': req.body.sku},
+                    { $push: {
+                        'skus.$.sizes': {size: req.body.sizes[i], qty: req.body.qty[i]}
+                    }},
+                    // {arrayFilters: [{'skus.sku': order.items[i].size}]}
+                )
+        }
+    }
+    else {
+        await Product.updateOne({ _id: req.params.id }, {
             $push: {
                 skus: [{
                     sku: req.body.sku,
@@ -73,15 +124,12 @@ const createSkus = async(req, res, next) => {
                     }]
                 }]
             }
-        }, { new: true })
-        .then(p => {
-            console.log(p);
-            res.send('Đã lưu skus thành công, cần sửa UI');
-        })
-        .catch(next);
+        }, { new: true });
+    }
+    // const product1 = await Product.findById(req.params.id);
 
     // const product = new Product.findById({ id: req.params.id }, function(err, product) {
-    //     sku,
+    //     sku, 
     //     img,
     //     color,
     //     sizes
@@ -103,6 +151,7 @@ const createSkus = async(req, res, next) => {
     // await product.save();
     // res.json(req.body);  
     // res.redirect('/admin/adminCreateList/step2');
+    
 }
 
 //[GET] /adminProduct/:id/editProduct
@@ -114,29 +163,82 @@ const showEditProduct = async(req, res, next) => {
 
 //[PUT] /adminProduct/:id
 const updateProduct = async(req, res, next) => {
-    const p = await Product.updateOne({ _id: req.params.id }, {
+    await Product.updateOne({ _id: req.params.id }, {
         name: req.body.name,
         category: req.body.category,
         gender: req.body.gender,
         price: req.body.price,
-        //     $push: {
-        //         skus: [{
-        //             sku: req.body.sku,
-        //             img: req.body.img,
-        //             color: {
-        //                 title: req.body.color_name,
-        //                 color_code: req.body.color_id,
-        //             },
-        //             sizes: [{
-        //                 size: req.body.sizes,
-        //                 qty: req.body.qty,
-        //             }]
-        //         }]
-        //     }
-        // }, { new: true });
     });
-    // console.log(p)
-    res.redirect('/adminProduct')
+    
+    // if(typeof req.body.sku !== 'object') {
+    //     await Product.updateOne(
+    //         {_id: req.params.id, "skus.sku": req.body.sku}, {
+    //         $set: {
+    //             'skus.$.sku': req.body.sku,
+    //             'skus.$.img': req.body.img,
+    //             'skus.$.color.title': req.body.color_name,
+    //             'skus.$.color.color_code': req.body.color_id,
+    //         },
+    //     }).then(data => {
+    //         console.log(data);
+    //     });
+    // }
+    res.redirect('back')
+}
+
+//[PUT] /adminProduct/:id/:sku
+const updateSKu = async(req, res, next) => {
+    const obj = {
+        sku: req.body.sku,
+        img: req.body.img,
+        color: {
+            title: req.body.color_name,
+            color_code: req.body.color_id,
+        },
+        sizes: []
+    }
+    if(typeof req.body.sizes === 'object') {
+        for(var i in req.body.sizes) {
+            var size = {
+                size: req.body.sizes[i],
+                qty: req.body.qty[i],
+            }
+            obj.sizes.push(size);
+        }
+    }
+    else {
+        var size = {
+            size: req.body.sizes,
+            qty: req.body.qty,
+        }
+        obj.sizes.push(size);
+    }
+    
+
+    await Product.updateOne(
+        {_id: req.params.id, 'skus.sku': req.body.sku},
+        {$set: {'skus.$': obj}} 
+    )
+    await Product.updateOne({ _id: req.params.id }, {
+        name: req.body.name,
+        category: req.body.category,
+        gender: req.body.gender,
+        price: req.body.price,
+    });
+    res.redirect('editProduct');
+}
+
+//[PUT] /adminProduct/:id/:sku/edit
+const showEditSku = async(req, res, next) => { 
+    const user = await User.findOne({ role: 'admin' });
+    const product = await Product.findById(req.params.id);
+    var sku = '';
+    for(var item of product.skus) {
+        if(`${item.sku}` === req.params.sku)
+            sku = `${JSON.stringify(item)}`
+    }
+    const productSku = JSON.parse(sku);
+    res.render('TabAdmin/admin-skus-edit', { layout: 'mainAdmin.hbs', product: mongooseToObject(product), sku: productSku, user: mongooseToObject(user) });
 }
 
 //[DELETE] /adminProduct/deleteProduct/:id
@@ -146,5 +248,4 @@ const deleteProduct = async(req, res, next) => {
         .catch(next);
 }
 
-
-module.exports = { showProductList, showCreateList, createProduct, createSkus, showEditProduct, updateProduct, deleteProduct }
+module.exports = { showProductList, showCreateList, createProduct, createSkus, showEditProduct, showEditSku, updateProduct, updateSKu, deleteProduct }
