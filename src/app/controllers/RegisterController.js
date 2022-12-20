@@ -43,7 +43,6 @@ const registerStore = async(req, res, next) => {
         email: req.body.email,
         password: hashPassword,
         name: req.body.name,
-        phonenumber: req.body.phone,
         address: req.body.address,
     });
     try {

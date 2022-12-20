@@ -14,8 +14,6 @@
    <link href="/admin/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
    <link href="/admin/vendor/owl-carousel/owl.carousel.css" rel="stylesheet">
    <link href="/admin/css/style.css" rel="stylesheet">
-   <link href="/admin/css/main.css" rel="stylesheet">
-   <link href="/admin/css/order.css" rel="stylesheet">
 
 
    <!-- Load fonts style after rendering the layout styles -->
@@ -23,7 +21,7 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
    <link rel="stylesheet" href="/admin/icons/font-awesome-old/css/fontawesome.min.css">
    
-   <title>Glamorous</title>
+   <title>KCT Shop</title>
 </head>
 
 <body>
@@ -38,10 +36,6 @@
       {{>headerAdmin}}  
       {{{body}}}
       {{>footerAdmin}}
-
-      <input type="text" class="succ" value="{{orderSuccess}}" hidden>
-      <input type="text" class="fail" value="{{orderFail}}" hidden>
-
    </div>
 
    <!-- Start Script -->
@@ -58,8 +52,6 @@
    <script src="/admin/js/deznav-init.js"></script>
    <script src="/admin/js/demo.js"></script>
    <script src="/admin/js/styleSwitcher.js"></script>
-   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-   {{!-- Socketio --}}
    <script>
       const socket = io();
 
@@ -85,71 +77,6 @@
 
          messages.appendChild(chatItem);
       })
-   </script>
-
-   <script type="text/javascript">
-      var condition = document.getElementsByClassName('succ');
-      condition.innerHTML = "{{orderSuccess}}";
-      var orderSuccess = parseInt(condition.innerHTML)
-
-      var condition = document.getElementsByClassName('fail');
-      condition.innerHTML = "{{orderFail}}";
-      var orderFail = parseInt(condition.innerHTML)
-    
-   
-      const pieChart = {
-         chart: null,
-         data: [
-            ['Jewels', 'Sales'],
-            ['Đơn hàng thành công', orderSuccess],
-            ['Đơn hàng đã hủy', orderFail],
-         ],
-         element: '#pie-chart',
-         options: {
-            title: '05/2022 Thống kê đơn hàng',
-            width: 800,
-            height: 200
-         }
-         };
-
-         const barChart = {
-         chart: null,
-         data: [
-            ['Product', 'Đơn hàng'],
-            ['Đơn hàng đã hủy', orderFail],
-            ['Đơn hàng thành công', orderSuccess]
-         ],
-         element: '#bar-chart',
-         options:  {
-            title: '05/2022 Thống kê đơn hàng',
-            width: 800,
-            height: 200
-         }
-         };
-
-         const init = () => {
-            pieChart.chart = new google.visualization.PieChart(
-               document.querySelector(pieChart.element)
-            );
-            pieChart.chart.draw(
-               google.visualization.arrayToDataTable(pieChart.data),
-               pieChart.options
-            );
-            
-            barChart.chart = new google.visualization.BarChart(
-               document.querySelector(barChart.element)
-            );
-            barChart.chart.draw(
-               google.visualization.arrayToDataTable(barChart.data),
-               barChart.options
-            );
-            
-         };
-
-         google.charts.load('current', {
-            packages: ['corechart'],
-            callback: init
-         });
    </script>
    <!-- End Script -->
 </body>

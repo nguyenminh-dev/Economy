@@ -20,15 +20,14 @@ const showCreatePromotion = async(req, res, next) => {
 
 //[POST] /adminPromotion/createPromotion/save
 const createPromotion = async(req, res, next) => {
-    const { makm, tenkm, giakm, ngayapdung, ngayhethan, motakm, promoRange } = req.body;
+    const { makm, tenkm, giakm, ngayapdung, ngayhethan, motakm } = req.body;
     const newPromotion = new Promotion({
         makm,
         tenkm,
         giakm,
         ngayapdung,
         ngayhethan,
-        motakm,
-        promoRange,
+        motakm
     });
     await newPromotion.save();
     res.redirect('/adminPromotion');
@@ -50,7 +49,6 @@ const updatePromotion = async(req, res, next) => {
         ngayapdung: req.body.ngayapdung,
         ngayhethan: req.body.ngayhethan,
         motakm: req.body.motakm,
-        promoRange: req.body.promoRange,
     });
     res.redirect('/adminPromotion')
 }

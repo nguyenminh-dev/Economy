@@ -2,41 +2,30 @@ const homeRouter = require('./home');
 const productRouter = require('./product');
 const registerRouter = require('./register');
 const loginRouter = require('./login');
-const loginFBRouter = require('./loginFb');
+const loginFBRouter = require('./loginFB');
 const logoutRouter = require('./logout');
 const forgotPassRouter = require('./forgotPass');
-const paymentRouter = require('./payment');
 
 const customerRouter = require('./customer');
+
+const paymentRouter = require('./payment');
+const orderRouter = require('./order');
 
 const adminRouter = require('./admin');
 const adminProductRouter = require('./adminProduct');
 const adminPromotionRouter = require('./adminPromotion');
-const adminOrderRouter = require('./adminOrder');
-const adminStaffRouter = require('./adminStaff');
-
-const staffRouter = require('./staff');
-const deliveryStaffRouter = require('./deliveryStaff');
-
-const testRouter = require('./test');
 
 
 function route(app) {
-
-    app.use('/test', testRouter);
-
-    app.use('/deliveryStaff', deliveryStaffRouter);
-    app.use('/staff', staffRouter);
-
-    app.use('/adminStaff', adminStaffRouter);
-    app.use('/adminOrder', adminOrderRouter);
     app.use('/adminPromotion', adminPromotionRouter);
     app.use('/adminProduct', adminProductRouter);
     app.use('/admin', adminRouter);
 
+    // app.use('/order', orderRouter);
+    app.use('/payment', paymentRouter);
+
     app.use('/customer', customerRouter);
 
-    app.use('/payment', paymentRouter);
     app.use('/forgotPass', forgotPassRouter);
     app.use('/logout', logoutRouter);
     app.use('/loginFB', loginFBRouter);

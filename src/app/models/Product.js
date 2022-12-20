@@ -1,4 +1,3 @@
-const { number } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -14,7 +13,7 @@ const Product = new Schema({
             title: { type: String },
             color_code: { type: String }
         },
-        sizes: [{ size: { type: String }, qty: { type: Number } }]
+        sizes: [{ size: { type: String }, qty: { type: String } }]
     }]
 })
 

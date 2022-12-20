@@ -2,7 +2,7 @@ const express = require('express');
 var handlebars = require('express-handlebars');
 const app = express();
 const path = require('path');
-const port = 3000 || process.env.PORT;
+const port = 3000;
 const bodyParser = require('body-parser');
 const route = require('./routes');
 const methodOverride = require('method-override');
@@ -43,9 +43,9 @@ app.use(cookieParser('secret'));
 //Express-session
 app.use(session({
     secret: "mysecret",
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    name: 'Customer',
+    // cookie: { maxAge: null }
 }));
 
 //Passport middleware
@@ -56,12 +56,6 @@ app.use(passport.session());
 app.use((req, res, next) => {
     res.locals.message = req.session.message;
     delete req.session.message;
-    next();
-});
-
-app.use((req, res, next) => {
-    res.locals.message1 = req.session.message1;
-    delete req.session.message1;
     next();
 });
 
@@ -82,42 +76,9 @@ hbs.handlebars.registerHelper('ifCond', function(v1, v2, options) {
     return options.inverse(this);
 });
 
-hbs.handlebars.registerHelper('ifNotCond', function(v1, v2, options) {
-    if (v1 != v2) {
-        return options.fn(this);
-    }
-    return options.inverse(this);
-});
-
-
-hbs.handlebars.registerHelper('ifTest', function(v1, options) {
-    switch (v1) {
-        case "info":
-            return '<span class="badge badge-info">' + "Chờ xác nhận" + '</span>';
-        case "success":
-            return '<span class="badge badge-warning">' + "Chờ lấy hàng" + '</span>';
-        case "prepare":
-            return '<span class="badge badge-info">' + "Chờ giao hàng" + '</span>';
-        case "shipping":
-            return '<span class="badge badge-primary">' + "Đang giao" + '</span>';
-        case "done":
-            return '<span class="badge badge-success">' + "Giao thành công" + '</span>';
-        case "danger":
-            return '<span class="badge badge-secondary">' + "Đã huỷ" + '</span>';
-    }
-});
-
-hbs.handlebars.registerHelper('ifPromo', function(v1, v2, options) {
-    if (v1 === v2) {
-        return options.fn(this);
-    }
-    return options.inverse(this);
-});
-
-hbs.handlebars.registerHelper("inc", function(value, options)
-{
-    return parseInt(value) + 1;
-});
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+app.set("views", path.join(__dirname, 'resources', 'views'));
 
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
@@ -125,6 +86,6 @@ app.set("views", path.join(__dirname, 'resources', 'views'));
 
 route(app)
 
-app.listen( process.env.PORT || 3000 , "0.0.0.0", () => {
-    console.log(`app listen at ${process.env.PORT}`)
+server.listen(port, () => {
+    console.log(`app listen at http://localhost:${port}`)
 })
