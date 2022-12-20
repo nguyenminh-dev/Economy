@@ -1,0 +1,51 @@
+<!-- Modal -->
+<div class="login-form w3_form">
+   <!--  Title-->
+   <div class="login w3_login">
+      <h3 class="text-center pt-5" style="color: #59ab6e;">ĐĂNG NHẬP</h3>
+      <div class="w3l_grid">
+
+         {{#if message}}
+         <div style="text-align: center" class="alert alert-{{message.type}}">
+            <strong>{{message.intro}}</strong> {{message.message}}
+         </div>
+         {{/if}}
+
+         <form class="login-container d-grid" method="POST" action="/login/loginStore">
+            <input class="form-control" type="email" placeholder="Email" name="email" required />
+            <input class="form-control" type="password" placeholder="Mật khẩu" name="password" required />
+            <button type="submit" class="btn btn-success mt-3">Đăng nhập</button>
+         </form>
+         <div class="second-section w3_section" style="padding-bottom: 10px">
+            <div class="bottom-header w3_bottom">
+               <h3>HOẶC</h3>
+            </div>
+            <div class="social-links w3_social">
+               <ul>
+                  <!-- facebook -->
+                  <li>
+                     <a class="facebook" href="/loginFb" target="blank"><i class="fab fa-facebook"></i></a>
+                  </li>
+
+                  <!-- twitter -->
+                  {{!-- <li>
+                     <a class="twitter" href="#" target="blank"><i class="fab fa-twitter"></i></a>
+                  </li> --}}
+
+                  <!-- google plus -->
+                  <li>
+                     <a class="googleplus" href="#" target="blank"><i class="fab fa-google"></i></a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+
+         <div class="bottom-text w3_bottom_text">
+            <p>Chưa có tài khoản?<a href="/register"><strong>Đăng ký</strong></a></p>
+            <h4> <a href="/forgotPass"><strong>Quên mật khẩu?</strong></a></h4>
+         </div>
+
+      </div>
+   </div>
+
+</div>
